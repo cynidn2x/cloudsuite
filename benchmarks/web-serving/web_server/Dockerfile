@@ -26,12 +26,12 @@ RUN apt-get install -y --force-yes \
     libpcre3-dev zlib1g-dev libssl-dev && \
     NGINX_VERSION=$(nginx -v 2>&1 | grep -oP '(?<=nginx/)[0-9.]+') && \
     cd /tmp && \
-    wget https://github.com/vozlt/nginx-module-vts/archive/v0.2.1.tar.gz -O nginx-module-vts.tar.gz && \
+    wget https://github.com/vozlt/nginx-module-vts/archive/v0.2.3.tar.gz -O nginx-module-vts.tar.gz && \
     tar zxvf nginx-module-vts.tar.gz && \
     wget http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz && \
     tar zxvf nginx-${NGINX_VERSION}.tar.gz && \
     cd nginx-${NGINX_VERSION} && \
-    ./configure --with-compat --add-dynamic-module=/tmp/nginx-module-vts-0.2.1 && \
+    ./configure --with-compat --add-dynamic-module=/tmp/nginx-module-vts-0.2.3 && \
     make modules && \
     cp objs/ngx_http_vhost_traffic_status_module.so /usr/lib/nginx/modules/ && \
     cd / && rm -rf /tmp/nginx* && \
