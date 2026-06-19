@@ -1,0 +1,4 @@
+locust>=2.14.0
+requests>=2.31.0
+gevent>=23.7.0
+gevent-websocket>=0.10.1

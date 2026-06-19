@@ -1,0 +1,69 @@
+version: '3.8'
+
+services:
+  # Elgg server (reference - adjust as needed for your setup)
+  # elgg-server:
+  #   image: your-elgg-image
+  #   ports:
+  #     - "8080:8080"
+  #   environment:
+  #     - DB_HOST=db
+  #     - DB_USER=elgg
+  #     - DB_PASSWORD=elggpass
+  #   depends_on:
+  #     - db
+
+  # Locust master node
+  locust-master:
+    build: .
+    ports:
+      - "8089:8089"  # Web UI
+      - "5557:5557"  # Master communication
+      - "5558:5558"  # Master communication
+    environment:
+      - LOCUST_HOST=http://elgg-server:8080
+    command: >
+      locust -f locustfile.py
+        --host=http://elgg-server:8080
+        --master
+        --master-bind-host=0.0.0.0
+        --master-bind-port=5557
+    volumes:
+      - ./locustfile.py:/app/locustfile.py
+      - ./users.list:/app/users.list
+    depends_on:
+      - locust-worker
+
+  # Locust worker node (add more workers by copying this service)
+  locust-worker:
+    build: .
+    environment:
+      - LOCUST_HOST=http://elgg-server:8080
+    command: >
+      locust -f locustfile.py
+        --host=http://elgg-server:8080
+        --worker
+        --master-host=locust-master
+        --master-port=5557
+    volumes:
+      - ./locustfile.py:/app/locustfile.py
+      - ./users.list:/app/users.list
+    depends_on:
+      - locust-master
+
+  # Optional: Additional worker nodes
+  # locust-worker-2:
+  #   build: .
+  #   environment:
+  #     - LOCUST_HOST=http://elgg-server:8080
+  #   command: >
+  #     locust -f locustfile.py
+  #       --host=http://elgg-server:8080
+  #       --worker
+  #       --master-host=locust-master
+  #       --master-port=5557
+  #   volumes:
+  #     - ./locustfile.py:/app/locustfile.py
+  #     - ./users.list:/app/users.list
+  #   depends_on:
+  #     - locust-master

@@ -1,9 +1,9 @@
 FROM cloudsuite/base-os:ubuntu
-ENV DEBIAN_FRONTEND noninteractive
+ENV DEBIAN_FRONTEND=noninteractive
 
 USER root
 
-ENV VERSION 8.1
+ENV VERSION=8.1
 
 RUN apt-get update && \
     apt-get install -y --force-yes software-properties-common && \
@@ -69,6 +69,6 @@ RUN chown root:root /etc/bootstrap.sh
 RUN chmod 700 /etc/bootstrap.sh
 
 EXPOSE 8080
-EXPOSE 8443
+EXPOSE 8083
 
 CMD ["/etc/bootstrap.sh", "-d"]
